@@ -27,13 +27,11 @@ create_dirs:
 	@mkdir -p $(DATA_DIR)/mariadb
 
 clean: down
-	@docker system prune -a --force
 
 fclean: clean
-	@docker run --rm -v $(DATA_DIR):/data debian:bookworm rm -rf /data/wordpress/* /data/mariadb/* 2>/dev/null || true
+	@docker compose -f $(COMPOSE_FILE) down -v --rmi all 2>/dev/null || true
 	@rm -rf $(DATA_DIR)/wordpress/* 2>/dev/null || true
 	@rm -rf $(DATA_DIR)/mariadb/* 2>/dev/null || true
-	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
 
 re: fclean all
 
